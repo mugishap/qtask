@@ -16,10 +16,14 @@ export class ProjectService {
                 name: dto.name,
                 description: dto.description,
                 file: {
-                    connect: {
-                        id: dto.fileId
+                    create: {
+                        name: dto.file.name ?? null,
+                        url: dto.file.url ?? null
                     }
                 }
+            },
+            include: {
+                file: true
             }
         })
         return project;
@@ -44,6 +48,11 @@ export class ProjectService {
                 file: true
             }
         })
+        return projects;
+    }
+
+    async getAllProjects() {
+        const projects = await this.prisma.project.findMany({})
         return projects;
     }
 

@@ -17,7 +17,7 @@ export class UserController {
     @Post("create")
     async create(@Body() dto: CreateUserDTO) {
         const response = await this.userService.create(dto);
-        return ServerResponse.success("User created successfully", { user: response });
+        return ServerResponse.success("User created successfully", { ...response });
     }
 
     @Put("update")
@@ -41,17 +41,24 @@ export class UserController {
         return ServerResponse.success("User fetched successfully", { user: response });
     }
 
-    @Get("all")
+    @Get("get-users-paginated")
     @UseGuards(AuthGuard)
     @ApiQuery({ name: "page", required: false, example: 0, type: Number })
     @ApiQuery({ name: "limit", required: false, example: 5, type: Number })
-    async all(
+    async getUsers(
         @Query("page")
         page: number = 0,
         @Query("limit")
         limit: number = 5
     ) {
-        const response = await this.userService.findAll(page, limit);
+        const response = await this.userService.findAllPaginated(page, limit);
+        return ServerResponse.success("Users fetched successfully", { users: response });
+    }
+
+    @Get("all")
+    @UseGuards(AuthGuard)
+    async all() {
+        const response = await this.userService.findAll();
         return ServerResponse.success("Users fetched successfully", { users: response });
     }
 

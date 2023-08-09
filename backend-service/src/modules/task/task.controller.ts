@@ -1,14 +1,16 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { TaskService } from './task.service';
-import { ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import ServerResponse from 'src/utils/ServerResponse';
 import { UpdateTaskDTO } from './dto/update-task.dto';
+import { AddFileDTO } from './dto/add-file.dto';
 
 @Controller('task')
 @ApiTags("tasks")
 @UseGuards(AuthGuard)
+@ApiBearerAuth()
 export class TaskController {
 
     constructor(
@@ -134,11 +136,10 @@ export class TaskController {
         return ServerResponse.success("Assignee removed successfully", { task });
     }
 
-    @Patch("add-file/:taskId/:fileId")
+    @Patch("add-file/:taskId")
     @ApiParam({ name: "taskId", type: String })
-    @ApiParam({ name: "fileId", type: String })
-    async addFile(@Param("taskId") taskId: string, @Param("fileId") fileId: string) {
-        const task = await this.taskService.addFileToTask(taskId, fileId);
+    async addFile(@Param("taskId") taskId: string, @Body() dto: AddFileDTO, @Param("fileId") fileId: string) {
+        const task = await this.taskService.addFileToTask(taskId, dto);
         return ServerResponse.success("File added successfully", { task });
     }
 

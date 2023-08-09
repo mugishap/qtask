@@ -9,8 +9,7 @@ const initialState: {
 } = {
     user: {
         id: "",
-        firstName: "",
-        lastName: "",
+        names: "",
         email: "",
         telephone: "",
     },
@@ -32,19 +31,10 @@ const userSlice: Slice = createSlice({
         logout: (state) => {
             state.isLoggedIn = false;
             state.user = {
-                _id: "",
-                fullname: "",
-                avatar: "",
-                createdAt: "",
-                email: "",
-                role: "NORMAL",
-                updatedAt: "",
-                location: "",
-                mobile: ""
-            };
+              ... initialState.user
+            }
             state.token = ""
             state.users = []
-            localStorage.removeItem("token");
             window.location.replace("/auth/login");
         },
         updateUser: (state, { payload }) => {

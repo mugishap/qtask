@@ -25,8 +25,7 @@ enum Status {
 
 model User {
   id        String   @id @default(uuid())
-  firstName String
-  lastName  String
+  names     String   @unique
   email     String   @unique
   telephone String?
   password  String
@@ -41,18 +40,18 @@ model User {
 
 model Task {
   id          String   @id @default(uuid())
-  title       String
+  name        String
   description String
   priority    Priority @default(LOW)
   status      Status   @default(TODO)
   projectId   String?
-  project     Project? @relation(fields: [projectId], references: [id])
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   startDate   DateTime
   endDate     DateTime
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   assignees   User[]
-  file        File?    @relation(fields: [fileId], references: [id])
+  file        File?    @relation(fields: [fileId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   fileId      String?
 
   @@map("tasks")
@@ -60,8 +59,8 @@ model Task {
 
 model File {
   id        String    @id @default(uuid())
-  name      String
-  url       String
+  name      String?
+  url       String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Task      Task[]
@@ -74,7 +73,7 @@ model Project {
   id          String   @id @default(uuid())
   name        String
   description String
-  file        File?    @relation(fields: [fileId], references: [id])
+  file        File?    @relation(fields: [fileId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   fileId      String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

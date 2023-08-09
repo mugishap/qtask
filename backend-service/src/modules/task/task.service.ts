@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
+import { AddFileDTO } from './dto/add-file.dto';
 
 @Injectable()
 export class TaskService {
@@ -13,7 +14,7 @@ export class TaskService {
     async createTask(dto: CreateTaskDTO) {
         const task = await this.prisma.task.create({
             data: {
-                title: dto.title,
+                name: dto.name,
                 description: dto.description,
                 startDate: dto.startDate,
                 endDate: dto.endDate,
@@ -22,7 +23,10 @@ export class TaskService {
                     connect: dto.assigneesIds.map(id => ({ id }))
                 },
                 file: {
-                    connect: { id: dto.fileId ?? null }
+                    create: {
+                        name: dto.file.name,
+                        url: dto.file.url
+                    }
                 },
                 status: dto.status ?? "TODO",
             }
@@ -33,7 +37,7 @@ export class TaskService {
         const task = await this.prisma.task.update({
             where: { id: taskId },
             data: {
-                title: dto.title,
+                name: dto.name,
                 description: dto.description,
                 startDate: dto.startDate,
                 endDate: dto.endDate
@@ -162,14 +166,18 @@ export class TaskService {
         return task;
     }
 
-    async addFileToTask(taskId: string, fileId: string) {
+    async addFileToTask(taskId: string, dto: AddFileDTO) {
         const task = await this.prisma.task.update({
             where: { id: taskId },
             data: {
                 file: {
-                    connect: { id: fileId }
-                }
-            }
+                    create: {
+                        name: dto.name,
+                        url: dto.url
+                    }
+                },
+            },
+            include: { file: true }
         })
         return task;
     }
@@ -201,7 +209,7 @@ export class TaskService {
     async searchTasks(search: string, page: number, limit: number) {
         const tasks = await this.prisma.task.findMany({
             where: {
-                title: {
+                name: {
                     contains: search
                 },
                 description: {

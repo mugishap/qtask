@@ -1,41 +1,31 @@
 import { Slice, createSlice } from "@reduxjs/toolkit";
-import { ITask } from "../../types";
+import { IProject } from "../../types";
 
 const initialState: {
-    task: ITask;
-    tasks: ITask[]
-    token: string;
-    isLoggedIn: boolean;
+    searchedProjects: IProject[];
+    projects: IProject[]
 } = {
-    task: {
-        id: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        telephone: "",
-    },
-    tasks: [],
-    token: "",
-    isLoggedIn: false,
+    searchedProjects: [],
+    projects: [],
 };
 
-const taskSlice: Slice = createSlice({
-    name: "task",
+const projectSlice: Slice = createSlice({
+    name: "project",
     initialState,
     reducers: {
-        updateTask: (state, { payload }) => {
-            state.task = payload;
-            state.tasks = state.tasks.map((task: ITask) => task.id === payload.id ? payload : task)
+        updateProject: (state, { payload }) => {
+            state.project = payload;
+            state.projects = state.projects.map((project: IProject) => project.id === payload.id ? payload : project)
         },
-        removeTask: (state, { payload }) => {
-            state.tasks = state.tasks.filter((task: ITask) => task.id !== payload)
+        removeProject: (state, { payload }) => {
+            state.projects = state.projects.filter((project: IProject) => project.id !== payload)
         },
-        setTasks: (state, { payload }) => {
-            state.tasks = [...payload]
+        setProjects: (state, { payload }) => {
+            state.projects = [...payload]
         }
     }
 });
 
-export const { login, logout, updateTask, removeTask, setTasks } = taskSlice.actions;
+export const { updateProject, removeProject, setProjects } = projectSlice.actions;
 
-export default taskSlice.reducer;
+export default projectSlice.reducer;

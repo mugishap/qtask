@@ -5,16 +5,9 @@ export class CreateUserDTO {
     @IsNotEmpty()
     @IsString()
     @MinLength(3)
-    @MaxLength(20)
+    @MaxLength(60)
     @ApiProperty()
-    readonly firstName: string;
-
-    @IsNotEmpty()
-    @IsString()
-    @MinLength(3)
-    @MaxLength(20)
-    @ApiProperty()
-    readonly lastName: string;
+    readonly names: string;
 
     @IsEmail()
     @ApiProperty()

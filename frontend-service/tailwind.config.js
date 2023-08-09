@@ -46,8 +46,8 @@ export default {
     colors: {
       ...colors,
       "delete-red": "#d72222",
-      "blueish":"#115061",
-      "whitish":"#e3edf6"
+      "primary-blue": "#1B1464",
+      "secondary-blue": "#29AAE3",
     }
   },
   plugins: [],

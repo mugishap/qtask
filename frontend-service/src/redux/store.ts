@@ -2,6 +2,10 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
+import userReducer from "./slices/userReducer";
+import projectReducer from "./slices/projectReducer";
+import taskReducer from "./slices/taskReducer";
+import statsReducer from "./slices/statsReducer";
 
 
 const persitConfig = {
@@ -11,9 +15,9 @@ const persitConfig = {
 
 const rootReducer = combineReducers({
     userSlice: userReducer,
-    projectSlide: projectReducer,
     taskSlice: taskReducer,
-
+    projectSlice: projectReducer,
+    statsSlice: statsReducer
 });
 
 const persistedReducer = persistReducer(persitConfig, rootReducer);
