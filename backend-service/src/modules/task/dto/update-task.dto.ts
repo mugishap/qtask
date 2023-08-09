@@ -20,7 +20,4 @@ export class UpdateTaskDTO {
     @IsDate()
     endDate: Date;
 
-    @IsArray()
-    assigneesIds: string[];
-
 }

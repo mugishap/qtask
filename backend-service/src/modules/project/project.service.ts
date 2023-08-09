@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProjectDTO } from './dto/create-project.dto';
+import { UpdateProjectDTO } from './dto/update-project.dto';
 
 @Injectable()
 export class ProjectService {
@@ -22,6 +23,44 @@ export class ProjectService {
             }
         })
         return project;
+    }
+
+    async updateProject(id: string, dto: UpdateProjectDTO) {
+        const project = await this.prisma.project.update({
+            where: { id },
+            data: {
+                name: dto.name,
+                description: dto.description,
+            }
+        })
+        return project;
+    }
+
+    async getProjects(page: number, limit: number) {
+        const projects = await this.prisma.project.findMany({
+            skip: page * limit,
+            take: limit,
+            include: {
+                file: true
+            }
+        })
+        return projects;
+    }
+
+    async searchProjects(search: string, page: number, limit: number) {
+        const projects = await this.prisma.project.findMany({
+            where: {
+                name: {
+                    contains: search
+                }
+            },
+            skip: page * limit,
+            take: limit,
+            include: {
+                file: true
+            }
+        })
+        return projects;
     }
 
 }

@@ -1,10 +1,12 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { FilesService } from './files.service';
 import ServerResponse from 'src/utils/ServerResponse';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('files')
 @ApiTags("files")
+@UseGuards(AuthGuard)
 export class FilesController {
 
     constructor(

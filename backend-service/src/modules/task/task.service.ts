@@ -36,10 +36,7 @@ export class TaskService {
                 title: dto.title,
                 description: dto.description,
                 startDate: dto.startDate,
-                endDate: dto.endDate,
-                assignees: {
-                    connect: dto.assigneesIds.map(id => ({ id }))
-                }
+                endDate: dto.endDate
             }
         })
         return task;
@@ -141,6 +138,74 @@ export class TaskService {
             where: {
                 project: {
                     id
+                }
+            },
+            include: {
+                assignees: true,
+                file: true,
+            },
+            skip: page * limit,
+            take: Number(limit),
+        })
+        return tasks;
+    }
+
+    async removeFileFromTask(taskId: string) {
+        const task = await this.prisma.task.update({
+            where: { id: taskId },
+            data: {
+                file: {
+                    disconnect: true
+                }
+            }
+        })
+        return task;
+    }
+
+    async addFileToTask(taskId: string, fileId: string) {
+        const task = await this.prisma.task.update({
+            where: { id: taskId },
+            data: {
+                file: {
+                    connect: { id: fileId }
+                }
+            }
+        })
+        return task;
+    }
+
+    async addAssigneeToTask(taskId: string, assigneeId: string) {
+        const task = await this.prisma.task.update({
+            where: { id: taskId },
+            data: {
+                assignees: {
+                    connect: { id: assigneeId }
+                }
+            }
+        })
+        return task;
+    }
+
+    async removeAssigneeFromTask(taskId: string, assigneeId: string) {
+        const task = await this.prisma.task.update({
+            where: { id: taskId },
+            data: {
+                assignees: {
+                    disconnect: { id: assigneeId }
+                }
+            }
+        })
+        return task;
+    }
+
+    async searchTasks(search: string, page: number, limit: number) {
+        const tasks = await this.prisma.task.findMany({
+            where: {
+                title: {
+                    contains: search
+                },
+                description: {
+                    contains: search
                 }
             },
             include: {

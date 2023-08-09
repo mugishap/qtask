@@ -118,5 +118,42 @@ export class TaskController {
         return ServerResponse.success("Tasks fetched successfully", { tasks });
     }
 
+    @Patch("add-assignee/:taskId/:userId")
+    @ApiParam({ name: "taskId", type: String })
+    @ApiParam({ name: "userId", type: String })
+    async addAssignee(@Param("taskId") taskId: string, @Param("userId") userId: string) {
+        const task = await this.taskService.addAssigneeToTask(taskId, userId);
+        return ServerResponse.success("Assignee added successfully", { task });
+    }
+
+    @Patch("remove-assignee/:taskId/:userId")
+    @ApiParam({ name: "taskId", type: String })
+    @ApiParam({ name: "userId", type: String })
+    async removeAssignee(@Param("taskId") taskId: string, @Param("userId") userId: string) {
+        const task = await this.taskService.removeAssigneeFromTask(taskId, userId);
+        return ServerResponse.success("Assignee removed successfully", { task });
+    }
+
+    @Patch("add-file/:taskId/:fileId")
+    @ApiParam({ name: "taskId", type: String })
+    @ApiParam({ name: "fileId", type: String })
+    async addFile(@Param("taskId") taskId: string, @Param("fileId") fileId: string) {
+        const task = await this.taskService.addFileToTask(taskId, fileId);
+        return ServerResponse.success("File added successfully", { task });
+    }
+
+    @Get("get-by-search/:search")
+    @ApiParam({ name: "search", type: String })
+    @ApiQuery({ name: "page", required: false, example: 0, type: Number })
+    @ApiQuery({ name: "limit", required: false, example: 5, type: Number })
+    async searchTasks(
+        @Param("search") search: string,
+        @Query("page") page: number = 0,
+        @Query("limit") limit: number = 5
+    ) {
+        const tasks = await this.taskService.searchTasks(search, page, limit);
+        return ServerResponse.success("Tasks fetched successfully", { tasks });
+    }
+
 }
 
