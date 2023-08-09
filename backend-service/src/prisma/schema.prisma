@@ -15,15 +15,23 @@ enum Priority {
   @@map("priorities")
 }
 
+enum Status {
+  DONE
+  IN_PROGRESS
+  TODO
+
+  @@map("statuses")
+}
+
 model User {
   id        String   @id @default(uuid())
-  firstName String   @map("first_name")
-  lastName  String   @map("last_name")
+  firstName String
+  lastName  String
   email     String   @unique
   telephone String?
   password  String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   taskId String?
   Task   Task?   @relation(fields: [taskId], references: [id])
@@ -32,32 +40,43 @@ model User {
 }
 
 model Task {
-  id        String   @id @default(uuid())
-  title     String
-  startDate DateTime @map("start_date")
-  endDate   DateTime @map("end_date")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  assignees User[]
-  file      File?    @relation(fields: [fileId], references: [id])
-  fileId    String?
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  priority    Priority @default(LOW)
+  status      Status   @default(TODO)
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id])
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  assignees   User[]
+  file        File?    @relation(fields: [fileId], references: [id])
+  fileId      String?
 
   @@map("tasks")
 }
 
 model File {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
   url       String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   Task      Task[]
+  Project   Project[]
 
   @@map("files")
 }
 
 model Project {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now()) @map("created_at")
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  file        File?    @relation(fields: [fileId], references: [id])
+  fileId      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Task        Task[]
 }
