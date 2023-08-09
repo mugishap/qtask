@@ -5,6 +5,8 @@ import { HealthModule } from './modules/health/health.module';
 import { UserModule } from './modules/user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { FilesModule } from './modules/files/files.module';
+import { TaskModule } from './modules/task/task.module';
+import { ProjectModule } from './modules/project/project.module';
 
 @Module({
   imports: [
@@ -16,7 +18,9 @@ import { FilesModule } from './modules/files/files.module';
     FilesModule,
     HealthModule,
     UserModule,
-    AuthModule
+    AuthModule,
+    TaskModule,
+    ProjectModule,
   ]
 })
 export class AppModule {

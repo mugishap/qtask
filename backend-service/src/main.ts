@@ -23,6 +23,8 @@ async function bootstrap() {
     .addTag('users')
     .addTag("tasks")
     .addTag("projects")
+    .addTag("files")
+    .addTag("health")
     .setContact("Mugisha Precieux", "https://github.com/mugishap", "precieuxmugisha@gmail.com")
     .build();
 

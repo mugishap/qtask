@@ -7,7 +7,7 @@ import ServerResponse from 'src/utils/ServerResponse';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 
 @Controller('task')
-@ApiTags("task")
+@ApiTags("tasks")
 @UseGuards(AuthGuard)
 export class TaskController {
 

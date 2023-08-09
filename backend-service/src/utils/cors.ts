@@ -1,6 +1,6 @@
 const whitelist = [
     "http://localhost:3000",
-    "http://localhost:5000",
+    "https://qtask-frontend.vercel.app",
 ];
 const options = {
     origin: (origin: string, callback: Function) => {

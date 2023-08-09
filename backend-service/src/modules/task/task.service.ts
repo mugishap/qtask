@@ -79,7 +79,7 @@ export class TaskService {
                 assignees: true,
                 file: true,
             },
-            skip: (page - 1) * limit,
+            skip: page * limit,
             take: Number(limit),
         })
         return tasks;
@@ -103,7 +103,7 @@ export class TaskService {
                 assignees: true,
                 file: true,
             },
-            skip: (page - 1) * limit,
+            skip: page * limit,
             take: Number(limit),
         })
         return tasks;
@@ -117,7 +117,7 @@ export class TaskService {
                 assignees: true,
                 file: true,
             },
-            skip: (page - 1) * limit,
+            skip: page * limit,
             take: Number(limit),
         })
         return tasks;
@@ -131,7 +131,7 @@ export class TaskService {
                 assignees: true,
                 file: true,
             },
-            skip: (page - 1) * limit,
+            skip: page * limit,
             take: Number(limit),
         })
         return tasks;
@@ -147,7 +147,7 @@ export class TaskService {
                 assignees: true,
                 file: true,
             },
-            skip: (page - 1) * limit,
+            skip: page * limit,
             take: Number(limit),
         })
         return tasks;
