@@ -26,6 +26,9 @@
 - [Contributing](../CONTRIBUTING.md)
 - [Authors](#authors)
 - [Acknowledgments](#acknowledgement)
+- [License](/LICENSE)
+- [Project Structure](/PROJECT.md)
+
 
 ## 🧐 About <a name = "about"></a>
 
