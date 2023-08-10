@@ -51,7 +51,7 @@ export class TaskService {
                     connect: { id: dto.projectId }
                 },
                 file: {
-                    
+
                     create: {
                         name: dto.file.name,
                         url: dto.file.url
@@ -62,6 +62,11 @@ export class TaskService {
                 },
                 startDate: dto.startDate,
                 endDate: dto.endDate
+            },
+            include: {
+                assignees: true,
+                file: true,
+                project: true,
             }
         })
         return task;
@@ -73,7 +78,7 @@ export class TaskService {
             data: {
                 status
             },
-            include: {  
+            include: {
                 assignees: true,
                 file: true,
                 project: true,
@@ -87,7 +92,7 @@ export class TaskService {
             data: {
                 priority
             },
-            include: {  
+            include: {
                 assignees: true,
                 file: true,
                 project: true,
