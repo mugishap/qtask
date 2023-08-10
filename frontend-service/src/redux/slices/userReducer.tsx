@@ -50,7 +50,7 @@ const userSlice: Slice = createSlice({
             state.users = [...payload]
         },
         setPaginatedUsers: (state, { payload }) => {
-            state.paginatedUsres = [...payload]
+            state.paginatedUsers = [...payload]
         },
     }
 });

@@ -8,7 +8,7 @@ import Layout from '../../layout/Layout'
 import { IUser } from '../../types'
 
 const Users: React.FC = () => {
-    const { dispatch, users, stats } = useContext(CommonContext)
+    const { dispatch, paginatedUsers, stats } = useContext(CommonContext)
     const [loading, setLoading] = useState<boolean>(false)
     const [page, setPage] = useState(1)
     const [limit, setLimit] = useState(5)
@@ -53,15 +53,15 @@ const Users: React.FC = () => {
         return pageNumbers;
     }
     useEffect(() => {
-        console.log(users)
-    }, [users])
+        console.log(paginatedUsers)
+    }, [paginatedUsers])
     useEffect(() => {
         setLimit(5)
     }, [])
     return (
         <Layout>
             <div className='w-full grid grid-cols-1 overflow-y-scroll  lg:grid-cols-2 xl:grid-cols-3'>
-                {!loading && users.length && users.map((user: IUser, index: number) => (
+                {!loading && paginatedUsers?.length && paginatedUsers.map((user: IUser, index: number) => (
                     <div className='w-11/12 mx-auto my-2 bg-slate-200 p-4 rounded hover:bg-slate-300 flex flex-col' key={index}>
                         <div className='w-full flex justify-between'>
                             <span className='font-bold text lg'>{user.names}</span>

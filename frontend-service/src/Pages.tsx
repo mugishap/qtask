@@ -33,6 +33,7 @@ const Pages: React.FC<{}> = () => {
     const projects: IProject[] = projectSlice.projects
     const isLoggedIn: boolean = userSlice.isLoggedIn
     const tasksByUserAndStatus = taskSlice.tasksByUserAndStatus
+    const paginatedUsers = userSlice.paginatedUsers
 
     const [showCreateTask, setShowCreateTask] = React.useState<boolean>(false)
     const [showCreateProject, setShowCreateProject] = React.useState<boolean>(false)
@@ -48,6 +49,7 @@ const Pages: React.FC<{}> = () => {
                 tasksByUserAndStatus,
                 showDownloadPopup,
                 setShowDownloadPopup,
+                paginatedUsers,
                 stats,
                 user,
                 users,

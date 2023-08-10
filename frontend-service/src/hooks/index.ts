@@ -46,7 +46,6 @@ export const useCreateUser = async ({ dispatch, formData, setLoading }: { dispat
         setLoading(false)
     }
 }
-// export const useUpdateUser = () => { }
 export const useGetTasksByUserAndStatus = async ({ dispatch, setLoading, status }: { dispatch: Dispatch, setLoading: Function, status: string }) => {
     try {
         setLoading(true)
@@ -73,7 +72,6 @@ export const useGetUsers = async ({ dispatch, page, limit, setLoading }: { dispa
         setLoading(false)
     }
 }
-// export const useDeleteUser = ({ dispatch, id, setLoading }: { dispatch: Dispatch, setLoading: Function, id: string }) => { }
 export const useGetAllUsers = async ({ dispatch, setLoading }: { dispatch: Dispatch, setLoading: Function }) => {
     try {
         setLoading(true)
