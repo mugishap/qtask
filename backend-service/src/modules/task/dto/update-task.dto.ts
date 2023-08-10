@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsDate, IsEmpty, IsNotEmpty, IsString, IsUUID, Max, MaxLength } from "class-validator";
+import { FileDTO } from "./file.dto";
 
 export class UpdateTaskDTO {
 
@@ -16,13 +17,22 @@ export class UpdateTaskDTO {
     description: string;
 
     @IsNotEmpty()
-    @IsDate()
     @ApiProperty()
     startDate: Date;
 
     @IsNotEmpty()
-    @IsDate()
     @ApiProperty()
     endDate: Date;
+
+    @IsArray()
+    @ApiProperty()
+    assigneesIds: string[];
+
+    @IsUUID()
+    @IsNotEmpty({ message: "Project is required" })
+    projectId: string;
+
+    @ApiProperty()
+    file: FileDTO
 
 }

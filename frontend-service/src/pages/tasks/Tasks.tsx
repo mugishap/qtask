@@ -1,7 +1,7 @@
 import { Avatar, AvatarGroup } from '@mui/material'
 import { format } from 'date-fns'
 import React, { useContext, useEffect, useState } from 'react'
-import { AiOutlinePlus } from 'react-icons/ai'
+import { AiFillCheckCircle, AiOutlineCheck, AiOutlineCheckCircle, AiOutlinePlus } from 'react-icons/ai'
 import { BiDownload } from 'react-icons/bi'
 import { CommonContext } from '../../context'
 import { useGetStats, useGetTasks } from '../../hooks'
@@ -11,12 +11,12 @@ import { ITask } from '../../types'
 const Tasks: React.FC = () => {
     const { dispatch, setShowCreateTask, tasks, setActiveTask, setShowTask, setShowDownloadPopup, stats } = useContext(CommonContext)
     const [loading, setLoading] = useState(false)
-    const [page, setPage] = useState(0)
+    const [page, setPage] = useState(1)
     const [limit, setLimit] = useState(5)
-    const [totalPages, setTotalPages] = useState<number>(stats.totalTasks / limit);
+    const [totalPages, setTotalPages] = useState<number>(Math.ceil(stats.tasks / limit));
 
     useEffect(() => {
-        useGetTasks({ dispatch, page: page, limit: limit, setLoading, })
+        useGetTasks({ dispatch, page: page - 1, limit: limit, setLoading, })
         useGetStats({ dispatch, setLoading })
     }, [page, limit])
 
@@ -52,6 +52,9 @@ const Tasks: React.FC = () => {
 
         return pageNumbers;
     }
+    useEffect(() => {
+        console.log(tasks)
+    }, [tasks])
     return (
         <Layout>
             <div className='w-full justify-end flex px-6 my-6'>
@@ -64,31 +67,36 @@ const Tasks: React.FC = () => {
                     <span className='ml-2'>Add Task</span>
                 </button>
             </div>
-            <div className='w-full grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+            <div className='w-full grid grid-cols-1 overflow-y-scroll  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
                 {tasks.length && tasks.map((task: ITask, index: number) => (
                     <div onClick={() => {
                         setActiveTask(task)
                         setShowTask(true)
-                    }} className='w-11/12 mx-auto my-2 bg-slate-200 p-4 rounded hover:bg-slate-300 flex flex-col' key={index}>
+                    }} className='w-11/12 cursor-pointer mx-auto my-2 bg-slate-200 p-4 rounded hover:bg-slate-300 flex flex-col' key={index}>
                         <div className='w-full flex justify-between'>
                             <span className='font-bold text lg'>{task.name}</span>
                             {
                                 task.status !== "DONE" &&
                                 <div className={`${task.priority === "HIGH" ? "bg-red-500" : task.priority === "MEDIUM" ? "bg-yellow-600" : "bg-green-500"} w-3 h-3 rounded-full`}></div>
                             }
+
+                        </div>
+                        <span className='my-4'>{task.createdAt ? format(new Date(task.createdAt), "d MMM HH:MM ") : format(new Date(), "d MMM HH:MM ")}</span>
+                        <div className='w-full flex items-center justify-between'>
                             {
                                 task.status === "DONE" &&
-                                <span className='bg-green-500 text-white px-3 py-2'>DONE</span>
+                                <div className='bg-green-500 text-white p-1 rounded-full'>
+                                    <AiOutlineCheckCircle color='white' size={25} />
+                                </div>
                             }
+                            <AvatarGroup max={4}>
+                                {
+                                    task.assignees?.map((assignee, index) => (
+                                        <Avatar key={index} alt={assignee.names} title={assignee.names} src={`https://ui-avatars.com/api/?name=${assignee.names}&bold=true&background=1B1464&color=fff`} />
+                                    ))
+                                }
+                            </AvatarGroup>
                         </div>
-                        <span className='my-4'>{format(new Date(task.createdAt ?? Date.toString()), "d MMM HH:MM ")}</span>
-                        <AvatarGroup max={4}>
-                            {
-                                task.assignees?.map((assignee, index) => (
-                                    <Avatar key={index} alt={assignee.names} title={assignee.names} src={`https://ui-avatars.com/api/?name=${assignee.names}&bold=true&background=1B1464&color=fff`} />
-                                ))
-                            }
-                        </AvatarGroup>
                     </div>
                 ))}
             </div>
@@ -115,7 +123,7 @@ const Tasks: React.FC = () => {
                             {pageNumber}
                         </span>
                     ))}
-                    {page < totalPages && (
+                    {page < totalPages - 1 && (
                         <button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                             onClick={() => setPage(page + 1)}

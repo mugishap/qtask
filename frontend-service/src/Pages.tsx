@@ -12,6 +12,8 @@ import Projects from './pages/projects/Projects'
 import Tasks from './pages/tasks/Tasks'
 import Users from './pages/users/Users'
 import { IProject, ITask, IUser } from './types'
+import TaskPage from './pages/task/TaskPage'
+import ProjectPage from './pages/project/ProjectPage'
 const Home = React.lazy(() => import('./pages/home/Home'))
 
 const Pages: React.FC<{}> = () => {
@@ -31,6 +33,7 @@ const Pages: React.FC<{}> = () => {
     } = statsSlice.stats
     const projects: IProject[] = projectSlice.projects
     const isLoggedIn: boolean = userSlice.isLoggedIn
+    const tasksByUserAndStatus = taskSlice.tasksByUserAndStatus
 
     const [showCreateTask, setShowCreateTask] = React.useState(false)
     const [showCreateProject, setShowCreateProject] = React.useState(false)
@@ -40,20 +43,10 @@ const Pages: React.FC<{}> = () => {
     const [activeTask, setActiveTask] = React.useState<ITask | null>(null)
     const [showDownloadPopup, setShowDownloadPopup] = React.useState(false)
 
-    const refresh = async ({ data, page, limit, setRefreshLoader }: { page: number, limit: number, setRefreshLoader: Function, data: "tasks" | "projects" | "users" }) => {
-        data === "tasks" && useGetTasks({ dispatch, page, limit, setLoading: setRefreshLoader })
-        data === "projects" && useGetProjects({ dispatch, page, limit, setLoading: setRefreshLoader })
-        data === "users" && useGetAllUsers({ dispatch, setLoading: setRefreshLoader })
-    }
-    const deleteData = async ({ data, id, setDeleteLoader }: { setDeleteLoader: Function, id: string, data: "tasks" | "projects" | "users" }) => {
-        setDeleteLoader(true)
-        data === "tasks" && useDeleteTask({ dispatch, setLoading: setDeleteLoader, id })
-        data === "projects" && useDeleteProject({ dispatch, setLoading: setDeleteLoader, id })
-        // data === "users" && useDeleteUser({ dispatch, setLoading: setDeleteLoader, id })
-    }
     return (
         <CommonContext.Provider
             value={{
+                tasksByUserAndStatus,
                 showDownloadPopup,
                 setShowDownloadPopup,
                 stats,
@@ -62,8 +55,6 @@ const Pages: React.FC<{}> = () => {
                 tasks,
                 projects,
                 dispatch,
-                refresh,
-                deleteData,
                 showCreateTask,
                 setShowCreateTask,
                 showCreateProject,
@@ -89,6 +80,8 @@ const Pages: React.FC<{}> = () => {
                             isLoggedIn &&
                             <>
                                 <Route path="/tasks" element={<Tasks />} />
+                                <Route path="/task/:id" element={<TaskPage />} />
+                                <Route path="/project/:id" element={<ProjectPage />} />
                                 <Route path="/users" element={<Users />} />
                                 <Route path="/profile" element={<Profile />} />
                                 <Route path="/projects" element={<Projects />} />

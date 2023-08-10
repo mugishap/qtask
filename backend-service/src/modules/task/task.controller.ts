@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
@@ -6,6 +6,7 @@ import { CreateTaskDTO } from './dto/create-task.dto';
 import ServerResponse from 'src/utils/ServerResponse';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 import { AddFileDTO } from './dto/add-file.dto';
+import { AuthRequest } from 'src/types';
 
 @Controller('task')
 @ApiTags("tasks")
@@ -52,6 +53,13 @@ export class TaskController {
     async getAllTasks(@Query("page") page: number = 0,
         @Query("limit") limit: number = 5) {
         const tasks = await this.taskService.getTasks(page, limit);
+        return ServerResponse.success("Tasks fetched successfully", { tasks });
+    }
+
+    @Get("get-by-user-and-status/:status")
+    @ApiParam({ name: "status", type: String })
+    async getTasksByUserAndStatus(@Req() request: AuthRequest, @Param("status") status: "TODO" | "IN_PROGRESS" | "DONE") {
+        const tasks = await this.taskService.getTasksByUserAndStatus(request.user.id, status);
         return ServerResponse.success("Tasks fetched successfully", { tasks });
     }
 
@@ -118,29 +126,6 @@ export class TaskController {
     ) {
         const tasks = await this.taskService.getTasksByPriority(priority, page, limit);
         return ServerResponse.success("Tasks fetched successfully", { tasks });
-    }
-
-    @Patch("add-assignee/:taskId/:userId")
-    @ApiParam({ name: "taskId", type: String })
-    @ApiParam({ name: "userId", type: String })
-    async addAssignee(@Param("taskId") taskId: string, @Param("userId") userId: string) {
-        const task = await this.taskService.addAssigneeToTask(taskId, userId);
-        return ServerResponse.success("Assignee added successfully", { task });
-    }
-
-    @Patch("remove-assignee/:taskId/:userId")
-    @ApiParam({ name: "taskId", type: String })
-    @ApiParam({ name: "userId", type: String })
-    async removeAssignee(@Param("taskId") taskId: string, @Param("userId") userId: string) {
-        const task = await this.taskService.removeAssigneeFromTask(taskId, userId);
-        return ServerResponse.success("Assignee removed successfully", { task });
-    }
-
-    @Patch("add-file/:taskId")
-    @ApiParam({ name: "taskId", type: String })
-    async addFile(@Param("taskId") taskId: string, @Body() dto: AddFileDTO, @Param("fileId") fileId: string) {
-        const task = await this.taskService.addFileToTask(taskId, dto);
-        return ServerResponse.success("File added successfully", { task });
     }
 
     @Get("get-by-search/:search")

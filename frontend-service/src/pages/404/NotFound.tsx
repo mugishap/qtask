@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const NotFound: React.FC<{}> = () => {
     React.useEffect(() => {
-        document.title = "404 | Prime Picks"
+        document.title = "404 | QTask"
     }, [])
     return (
 

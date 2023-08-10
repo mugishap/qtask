@@ -16,7 +16,8 @@ export interface IProject {
     name: string;
     description: string;
     file: IFile
-
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface ITask {
@@ -85,5 +86,11 @@ export interface IUpdateTaskData {
     name: string,
     description: string,
     startDate: string,
-    endDate: string
+    endDate: string,
+    projectId: string,
+    assigneesIds: string[],
+    file: {
+        name: string,
+        url: string
+    }
 }

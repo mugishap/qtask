@@ -32,6 +32,11 @@ export class TaskService {
                     connect: { id: dto.projectId }
                 },
                 status: "TODO",
+            },
+            include: {
+                file: true,
+                project: true,
+                assignees: true,
             }
         })
         return task;
@@ -42,6 +47,18 @@ export class TaskService {
             data: {
                 name: dto.name,
                 description: dto.description,
+                project: {
+                    connect: { id: dto.projectId }
+                },
+                file: {
+                    create: {
+                        name: dto.file.name,
+                        url: dto.file.url
+                    }
+                },
+                assignees: {
+                    connect: dto.assigneesIds.map(id => ({ id }))
+                },
                 startDate: dto.startDate,
                 endDate: dto.endDate
             }
@@ -54,6 +71,11 @@ export class TaskService {
             where: { id: taskId },
             data: {
                 status
+            },
+            include: {  
+                assignees: true,
+                file: true,
+                project: true,
             }
         })
         return task;
@@ -63,6 +85,11 @@ export class TaskService {
             where: { id: taskId },
             data: {
                 priority
+            },
+            include: {  
+                assignees: true,
+                file: true,
+                project: true,
             }
         })
         return task;
@@ -73,6 +100,7 @@ export class TaskService {
             include: {
                 assignees: true,
                 file: true,
+                project: true,
             }
         })
         return task;
@@ -80,8 +108,9 @@ export class TaskService {
     async getTasks(page: number, limit: number) {
         const tasks = await this.prisma.task.findMany({
             include: {
-                assignees: true,
                 file: true,
+                project: true,
+                assignees: true,
             },
             skip: page * limit,
             take: Number(limit),
@@ -123,6 +152,23 @@ export class TaskService {
             },
             skip: page * limit,
             take: Number(limit),
+        })
+        return tasks;
+    }
+    async getTasksByUserAndStatus(userId: string, status: "DONE" | "IN_PROGRESS" | "TODO") {
+        const tasks = await this.prisma.task.findMany({
+            where: {
+                status,
+                assignees: {
+                    some: {
+                        id: userId
+                    }
+                }
+            },
+            include: {
+                assignees: true,
+                file: true,
+            }
         })
         return tasks;
     }

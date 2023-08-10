@@ -43,7 +43,7 @@ export class ProjectService {
     async getProjects(page: number, limit: number) {
         const projects = await this.prisma.project.findMany({
             skip: page * limit,
-            take: limit,
+            take: Number(limit),
             include: {
                 file: true
             }
@@ -64,7 +64,7 @@ export class ProjectService {
                 }
             },
             skip: page * limit,
-            take: limit,
+            take: Number(limit),
             include: {
                 file: true
             }

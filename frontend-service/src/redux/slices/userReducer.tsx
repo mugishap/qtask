@@ -3,7 +3,8 @@ import { IUser } from "../../types";
 
 const initialState: {
     user: IUser;
-    users: IUser[]
+    users: IUser[];
+    paginatedUsers: IUser[];
     token: string;
     isLoggedIn: boolean;
 } = {
@@ -16,6 +17,7 @@ const initialState: {
     users: [],
     token: "",
     isLoggedIn: false,
+    paginatedUsers: []
 };
 
 const userSlice: Slice = createSlice({
@@ -31,7 +33,7 @@ const userSlice: Slice = createSlice({
         logout: (state) => {
             state.isLoggedIn = false;
             state.user = {
-              ... initialState.user
+                ...initialState.user
             }
             state.token = ""
             state.users = []
@@ -46,10 +48,13 @@ const userSlice: Slice = createSlice({
         },
         setUsers: (state, { payload }) => {
             state.users = [...payload]
-        }
+        },
+        setPaginatedUsers: (state, { payload }) => {
+            state.paginatedUsres = [...payload]
+        },
     }
 });
 
-export const { login, logout, updateUser, removeUser, setUsers } = userSlice.actions;
+export const { login, logout, updateUser, removeUser, setUsers, setPaginatedUsers } = userSlice.actions;
 
 export default userSlice.reducer;

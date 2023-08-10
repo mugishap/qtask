@@ -51,7 +51,7 @@ export class ExcelService {
                 project: { text: task.project.name, hyperlink: `${this.configService.get("CLIENT_URL")}/project/${task.projectId}` },
                 assignees: task.assignees.map(assignee => assignee.names).join(", "),
                 file: { text: task.file.name, hyperlink: task.file.url },
-                task_url: `${this.configService.get("CLIENT_URL")}/task/${task.id}`
+                task_url: { text: "Click here", hyperlink: `${this.configService.get("CLIENT_URL")}/task/${task.id}` }
             })
         })
 

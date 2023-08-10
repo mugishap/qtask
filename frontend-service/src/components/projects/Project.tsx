@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import ModalLayout from '../../layout/ModalLayout'
+import { CommonContext } from '../../context'
 
 const Project: React.FC = () => {
+    const { dispatch, projects, setActiveProject, setShowProject, stats } = useContext(CommonContext)
     return (
-        <div>Project</div>
+        <ModalLayout setViewModal={setShowProject}>
+
+        </ModalLayout>
     )
 }
 

@@ -1,15 +1,15 @@
 // User hooks
 
 import { Dispatch } from "@reduxjs/toolkit"
-import { ILoginData, INewTaskData, ISignupData } from "../types"
+import { ILoginData, INewTaskData, ISignupData, ITask, IUpdateTaskData, IUser } from "../types"
 import api from "../api";
-import { login, setUsers } from "../redux/slices/userReducer";
+import { login, setPaginatedUsers, setUsers } from "../redux/slices/userReducer";
 import { toast } from "react-toastify";
 import { setStats } from "../redux/slices/statsReducer";
 import { removeProject, setProjects } from "../redux/slices/projectReducer";
-import { addTask, removeTask, setTask, setTasks } from "../redux/slices/taskReducer";
+import { addTask, removeTask, setTask, setTasks, setTasksByUserAndStatus } from "../redux/slices/taskReducer";
 import { format, parseISO } from "date-fns";
-import { parseDate } from "../utils/date";
+import { parseDate, parseDateString } from "../utils/date";
 
 export const useLogin = async ({ dispatch, formData, setLoading }: { dispatch: Dispatch, formData: ILoginData, setLoading: Function }) => {
     try {
@@ -47,8 +47,32 @@ export const useCreateUser = async ({ dispatch, formData, setLoading }: { dispat
     }
 }
 // export const useUpdateUser = () => { }
-// export const useGetUser = () => { }
-// export const useGetUsers = ({ dispatch, page, limit, setLoading }: { dispatch: Dispatch, page: number, limit: number, setLoading: Function }) => { }
+export const useGetTasksByUserAndStatus = async ({ dispatch, setLoading, status }: { dispatch: Dispatch, setLoading: Function, status: string }) => {
+    try {
+        setLoading(true)
+        const response = await api().get("/task/get-by-user-and-status/" + status)
+        dispatch(setTasksByUserAndStatus(response.data.data.tasks))
+    } catch (error: any) {
+        console.log(error);
+        if (error.response.data.message) return toast.error(error.response.data.message)
+        toast.error("Failed to get tasks")
+    } finally {
+        setLoading(false)
+    }
+}
+export const useGetUsers = async ({ dispatch, page, limit, setLoading }: { dispatch: Dispatch, page: number, limit: number, setLoading: Function }) => {
+    try {
+        setLoading(true)
+        const response = await api().get("/user/get-users-paginated?page=" + page + "&limit=" + limit)
+        dispatch(setPaginatedUsers(response.data.data.users))
+    } catch (error: any) {
+        console.log(error);
+        if (error.response.data.message) return toast.error(error.response.data.message)
+        toast.error("Failed to get users")
+    } finally {
+        setLoading(false)
+    }
+}
 // export const useDeleteUser = ({ dispatch, id, setLoading }: { dispatch: Dispatch, setLoading: Function, id: string }) => { }
 export const useGetAllUsers = async ({ dispatch, setLoading }: { dispatch: Dispatch, setLoading: Function }) => {
     try {
@@ -68,8 +92,9 @@ export const useGetAllUsers = async ({ dispatch, setLoading }: { dispatch: Dispa
 export const useCreateTask = async ({ dispatch, setLoading, formData, setShowCreateTask, setFormData }: { setFormData: Function, dispatch: Dispatch, setLoading: Function, formData: INewTaskData, setShowCreateTask: Function }) => {
     try {
         setLoading(true)
-        const response = await api().post("/task/create", { ...formData, startDate: new Date(formData.startDate), endDate: new Date(formData.endDate) })
-        toast.success(response.data.message)
+        if (formData.assigneesIds.length === 0) return toast.error("Please select at least one assignee")
+        if (!formData.file.name || !formData.file.url) return toast.error("Please select a file for reference")
+        const response = await api().post("/task/create", { ...formData, startDate: (new Date(formData.startDate)).toISOString(), endDate: (new Date(formData.endDate)).toISOString() })
         dispatch(addTask(response.data.data.task))
         setShowCreateTask(false)
         setFormData({
@@ -85,7 +110,7 @@ export const useCreateTask = async ({ dispatch, setLoading, formData, setShowCre
                 url: ''
             }
         })
-        return
+        toast.success(response.data.message)
     } catch (error: any) {
         console.log(error);
         if (error.response.data.message) return toast.error(error.response.data.message)
@@ -94,12 +119,18 @@ export const useCreateTask = async ({ dispatch, setLoading, formData, setShowCre
         setLoading(false)
     }
 }
-export const useUpdateTask = async ({ id, dispatch, setLoading, formData }: { id: string, dispatch: Dispatch, setLoading: Function, formData: any }) => {
+export const useUpdateTask = async ({ id, dispatch, setLoading, formData, setActiveTask, setEditMode }: { setEditMode: Function, setActiveTask: Function, id: string, dispatch: Dispatch, setLoading: Function, formData: IUpdateTaskData }) => {
     try {
         setLoading(true)
-        const response = await api().put("/task/update/" + id, { ...formData })
+        if (formData.assigneesIds.length === 0) return toast.error("Please select at least one assignee")
+        if (!formData.file.name || !formData.file.url) return toast.error("Please select a file for reference")
+        console.log({ ...formData, startDate: (new Date(formData.startDate)).toISOString(), endDate: (new Date(formData.endDate)).toISOString() });
+        const response = await api().put("/task/update/" + id, { ...formData, startDate: (new Date(formData.startDate)).toISOString(), endDate: (new Date(formData.endDate)).toISOString() })
         dispatch(setTask({ id, task: response.data.data.task }))
+        setActiveTask({ ...response.data.data.task })
         toast.success(response.data.message)
+        setLoading(false)
+        setEditMode(false)
     } catch (error: any) {
         console.log(error);
         if (error.response.data.message) return toast.error(error.response.data.message)
@@ -122,7 +153,6 @@ export const useAddFileToTask = async ({ id, dispatch, setLoading, formData }: {
         setLoading(false)
     }
 }
-
 export const useGetTasks = async ({ dispatch, page, limit, setLoading }: { dispatch: Dispatch, page: number, limit: number, setLoading: Function }) => {
     try {
         setLoading(true)
@@ -136,12 +166,26 @@ export const useGetTasks = async ({ dispatch, page, limit, setLoading }: { dispa
         setLoading(false)
     }
 }
-export const useDeleteTask = async ({ dispatch, id, setLoading }: { dispatch: Dispatch, setLoading: Function, id: string }) => {
+export const useGetTask = async ({ id, setLoading }: { id: string, setLoading: Function }) => {
+    try {
+        setLoading(true)
+        const response = await api().get("/task/get/" + id)
+        return response.data.data.task
+    } catch (error: any) {
+        console.log(error);
+        if (error.response.data.message) return toast.error(error.response.data.message)
+        toast.error("Failed to get task")
+    } finally {
+        setLoading(false)
+    }
+}
+export const useDeleteTask = async ({ dispatch, id, setLoading, setShowTask }: { setShowTask: Function, dispatch: Dispatch, setLoading: Function, id: string }) => {
     try {
         setLoading(true)
         const response = await api().delete("/task/delete/" + id)
         dispatch(removeTask(id))
         toast.success(response.data.message)
+        setShowTask(false)
     } catch (error: any) {
         console.log(error);
         if (error.response.data.message) return toast.error(error.response.data.message)
@@ -150,13 +194,80 @@ export const useDeleteTask = async ({ dispatch, id, setLoading }: { dispatch: Di
         setLoading(false)
     }
 }
-export const useGetTasksByProject = () => { }
-export const useGetTasksByUser = () => { }
+export const useGetTasksByProject = async ({ projectId, dispatch, setLoading }: { projectId: string, dispatch: Dispatch, setLoading: Function }) => {
+    try {
+        setLoading(true)
+        const response = await api().get("/task/get-by-project/" + projectId)
+        dispatch(setTasks(response.data.data.tasks))
+    } catch (error: any) {
+        console.log(error);
+        if (error.response.data.message) return toast.error(error.response.data.message)
+        toast.error("Failed to get tasks")
+    } finally {
+        setLoading(false)
+    }
+}
+export const useGetTasksByUser = async ({ userId, dispatch, setLoading }: { userId: string, dispatch: Dispatch, setLoading: Function }) => {
+    try {
+        setLoading(true)
+        const response = await api().get("/task/get-by-user/" + userId)
+        dispatch(setTasks(response.data.data.tasks))
+    } catch (error: any) {
+        console.log(error);
+        if (error.response.data.message) return toast.error(error.response.data.message)
+        toast.error("Failed to get tasks")
+    } finally {
+        setLoading(false)
+    }
+}
+export const useUpdateTaskPriority = async ({ id, dispatch, setLoading, priority, setActiveTask }: { setActiveTask: Function, id: string, dispatch: Dispatch, setLoading: Function, priority: string }) => {
+    try {
+        setLoading(true)
+        const response = await api().patch(`/task/update-priority/${id}/${priority}`)
+        dispatch(setTask({ id, task: response.data.data.task }))
+        console.log(response.data.data.task);
 
+        setActiveTask({ ...response.data.data.task })
+        toast.success(response.data.message)
+    } catch (error: any) {
+        console.log(error);
+        if (error.response.data.message) return toast.error(error.response.data.message)
+        toast.error("Failed to update task priority")
+    } finally {
+        setLoading(false)
+    }
+}
+export const useUpdateTaskStatus = async ({ id, dispatch, setLoading, status, setActiveTask }: { setActiveTask: Function, id: string, dispatch: Dispatch, setLoading: Function, status: string }) => {
+    try {
+        setLoading(true)
+        const response = await api().patch(`/task/update-status/${id}/${status}`)
+        dispatch(setTask({ id, task: response.data.data.task }))
+        setActiveTask({ ...response.data.data.task })
+        toast.success(response.data.message)
+    } catch (error: any) {
+        console.log(error);
+        if (error.response.data.message) return toast.error(error.response.data.message)
+        toast.error("Failed to update task status")
+    } finally {
+        setLoading(false)
+    }
+}
 // Project hooks
 export const useCreateProject = () => { }
 export const useUpdateProject = () => { }
-export const useGetProject = () => { }
+export const useGetProject = async ({ id, setLoading }: { id: string, setLoading: Function }) => {
+    try {
+        setLoading(true)
+        const response = await api().get("/project/get/" + id)
+        return response.data.data.project
+    } catch (error: any) {
+        console.log(error);
+        if (error.response.data.message) return toast.error(error.response.data.message)
+        toast.error("Failed to get project")
+    } finally {
+        setLoading(false)
+    }
+}
 export const useGetProjects = async ({ dispatch, page, limit, setLoading }: { dispatch: Dispatch, page: number, limit: number, setLoading: Function }) => {
     try {
         setLoading(true)

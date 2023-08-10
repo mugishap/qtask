@@ -3,10 +3,12 @@ import { ITask, IUser } from "../../types";
 
 const initialState: {
     tasks: ITask[],
-    searchedTasks: ITask[]
+    searchedTasks: ITask[],
+    tasksByUserAndStatus: ITask[],
 } = {
     searchedTasks: [],
     tasks: [],
+    tasksByUserAndStatus: [],
 };
 
 const taskSlide: Slice = createSlice({
@@ -28,10 +30,13 @@ const taskSlide: Slice = createSlice({
         },
         addTask: (state, { payload }) => {
             state.tasks = [...state.tasks, payload]
+        },
+        setTasksByUserAndStatus: (state, { payload }) => {
+            state.tasksByUserAndStatus = [...payload]
         }
     }
 });
 
-export const { updateTask, removeTask, setTasks, setTask, addTask } = taskSlide.actions;
+export const { updateTask, removeTask, setTasksByUserAndStatus, setTasks, setTask, addTask } = taskSlide.actions;
 
 export default taskSlide.reducer;

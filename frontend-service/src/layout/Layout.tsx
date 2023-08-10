@@ -34,10 +34,10 @@ const Layout: React.FC<Props> = ({ children }) => {
             {showProject && <Project />}
             {showDownloadPopup && <DownloadPopup />}
             <Sidebar />
-            <div className='w-full sm:w-7/12 md:w-8/12 lg:w-9/12 xl:w-10/12 flex flex-col min-h-screen'>
+            <div className='w-full sm:w-7/12 md:w-8/12 lg:w-9/12 xl:w-10/12 flex flex-col h-screen'>
                 <div className='w-full flex justify-between items-center sm:justify-end px-8 py-4 border-b-2 border-slate-300'>
                     <img src={Logo} className='w-12 sm:hidden flex' alt="" />
-                    <span className='font-bold text-lg'>{format(time, 'HH:MM:SS aa')}</span>
+                    <span className='font-bold text-lg'>{format(time, 'HH:mm:SS aa')}</span>
                 </div>
                 <div className='w-full overflow-y-scroll'>
                     {children}
