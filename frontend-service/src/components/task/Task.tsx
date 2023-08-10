@@ -46,7 +46,6 @@ const Task: React.FC = () => {
     }
 
     const previewImage = () => {
-        console.log("In the function")
         const input: any = document.querySelector("#update-task-file");
         const file = input.files[0];
         const reader = new FileReader();

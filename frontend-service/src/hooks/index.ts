@@ -133,7 +133,6 @@ export const useUpdateTask = async ({ id, dispatch, setLoading, formData, setAct
         if(!formData.name) return toast.error("Please enter a name")
         if(!formData.description) return toast.error("Please enter a description")
         
-        console.log({ ...formData, startDate: (new Date(formData.startDate)).toISOString(), endDate: (new Date(formData.endDate)).toISOString() });
         const response = await api().put("/task/update/" + id, { ...formData, startDate: (new Date(formData.startDate)).toISOString(), endDate: (new Date(formData.endDate)).toISOString() })
         dispatch(setTask({ id, task: response.data.data.task }))
         setActiveTask({ ...response.data.data.task })
@@ -234,7 +233,6 @@ export const useUpdateTaskPriority = async ({ id, dispatch, setLoading, priority
         setLoading(true)
         const response = await api().patch(`/task/update-priority/${id}/${priority}`)
         dispatch(setTask({ id, task: response.data.data.task }))
-        console.log(response.data.data.task);
 
         setActiveTask({ ...response.data.data.task })
         toast.success(response.data.message)
@@ -308,7 +306,6 @@ export const useGetAllProjects = async ({ dispatch, setLoading }: { dispatch: Di
     try {
         setLoading(true)
         const response = await api().get("/project/get-all")
-        console.log(response.data.data.projects);
         dispatch(setProjects(response.data.data.projects))
     } catch (error: any) {
         console.log(error);
@@ -357,7 +354,6 @@ export const useDownloadExcel = async ({ formData, setLoading, setView }: { setV
     try {
         setLoading(true)
         const response = await api().get("/excel?startDate=" + parseDate(formData.startDate) + "&endDate=" + parseDate(formData.endDate), { responseType: 'blob' })
-        console.log(response);
         const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
