@@ -1,4 +1,5 @@
 import { Autocomplete, Chip, FormControlLabel, Radio, RadioGroup, TextField } from '@mui/material'
+import { format } from 'date-fns'
 import React, { useContext, useEffect, useState } from 'react'
 import { BiFile, BiLoaderAlt, BiRename, BiTime, BiX } from 'react-icons/bi'
 import { toast } from 'react-toastify'
@@ -7,8 +8,6 @@ import { useCreateTask, useGetAllProjects, useGetAllUsers } from '../../hooks'
 import ModalLayout from '../../layout/ModalLayout'
 import { INewTaskData, IProject, IUser } from '../../types'
 import { checkFileType, uploadImage } from '../../utils/file'
-import { format, parseISO } from 'date-fns'
-import { parseDateString } from '../../utils/date'
 
 const CreateTask: React.FC = () => {
 
@@ -197,7 +196,7 @@ const CreateTask: React.FC = () => {
                                 </div>}
                     </div>
                     <button disabled={loading || imageUploading} className='bg-secondary-blue mt-4 text-center w-44 h-12 mx-auto rounded text-white text-xl font-bold' type='submit'>{
-                        loading ? <BiLoaderAlt size={25} className="mx-auto" /> : "Save"
+                        loading ? <BiLoaderAlt size={25} className="mx-auto animate-spin" /> : "Save"
                     }</button>
                 </form>
             </div>

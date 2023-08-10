@@ -15,10 +15,19 @@ const ProjectPage: React.FC = () => {
     const getProject = async () => {
         const project = await useGetProject({ id: id as string, setLoading })
         setActiveProject(project)
-        setShowProject(true)
+        setShowProject(false)
     }
     return (
-        <Projects />
+        <>
+            {
+                loading ?
+                    <div className='w-full h-full flex items-center justify-center'>
+                        < div className='w-10 h-10 border-4 border-blue-500 rounded-full animate-spin' ></div >
+                    </div >
+                    :
+                    <Projects />
+            }
+        </>
     )
 }
 

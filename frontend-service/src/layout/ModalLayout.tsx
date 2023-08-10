@@ -1,5 +1,4 @@
 import React from 'react'
-import { Slide } from 'react-awesome-reveal'
 
 interface Props {
     children: React.ReactNode

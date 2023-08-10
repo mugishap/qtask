@@ -1,4 +1,3 @@
-
 <h3 align="center">QTASK Assignment repo</h3>
 
 <div align="center">
@@ -64,10 +63,12 @@ Then run the project on your local machine
 ```bash
     cd frontend-service & yarn start
     cd backend-service & yarn start
- ```
+```
+
 ## 🎈 Usage <a name="usage"></a>
 
-To use the system you will acess the live deployment online using this (link)[https://qtask.vercel.app/] or you can run the project on your local machine by following the steps above.
+To use the system you will acess the live deployment online using this [link](https://qtask.vercel.app/) or you can run the project on your local machine by following the steps above.
+
 ## 🚀 Deployment <a name = "deployment"></a>
 
 For Deploymnent and CI/CD you can use Docker to deploy the app on a live system.

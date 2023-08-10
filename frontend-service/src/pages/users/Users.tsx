@@ -1,24 +1,23 @@
-import { Avatar, AvatarGroup } from '@mui/material'
+import { Avatar } from '@mui/material'
 import { format } from 'date-fns'
 import React, { useContext, useEffect, useState } from 'react'
-import { AiOutlinePlus } from 'react-icons/ai'
-import { BiDownload } from 'react-icons/bi'
+import { Link } from 'react-router-dom'
 import { CommonContext } from '../../context'
 import { useGetStats, useGetUsers } from '../../hooks'
 import Layout from '../../layout/Layout'
 import { IUser } from '../../types'
-import { Link } from 'react-router-dom'
 
 const Users: React.FC = () => {
-    const { dispatch, users, setActiveUser, stats } = useContext(CommonContext)
+    const { dispatch, users, stats } = useContext(CommonContext)
     const [loading, setLoading] = useState<boolean>(false)
     const [page, setPage] = useState(1)
     const [limit, setLimit] = useState(5)
     const [totalPages, setTotalPages] = useState<number>(stats.users / limit);
 
     useEffect(() => {
-        useGetUsers({ dispatch, page: page-1, limit: limit, setLoading, })
+        useGetUsers({ dispatch, page: page - 1, limit: limit, setLoading, })
         useGetStats({ dispatch, setLoading })
+        setTotalPages(Math.ceil(stats.users / limit))
     }, [page, limit])
 
     const getPageNumbers = () => {
@@ -56,13 +55,13 @@ const Users: React.FC = () => {
     useEffect(() => {
         console.log(users)
     }, [users])
+    useEffect(() => {
+        setLimit(5)
+    }, [])
     return (
         <Layout>
-            <div className='w-full justify-end flex px-6 my-6'>
-
-            </div>
             <div className='w-full grid grid-cols-1 overflow-y-scroll  lg:grid-cols-2 xl:grid-cols-3'>
-                {users.length && users.map((user: IUser, index: number) => (
+                {!loading && users.length && users.map((user: IUser, index: number) => (
                     <div className='w-11/12 mx-auto my-2 bg-slate-200 p-4 rounded hover:bg-slate-300 flex flex-col' key={index}>
                         <div className='w-full flex justify-between'>
                             <span className='font-bold text lg'>{user.names}</span>

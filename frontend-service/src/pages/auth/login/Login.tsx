@@ -63,7 +63,7 @@ const Login: React.FC = () => {
           </div>
           <span className='my-6 flex items-center justify-center text-center text-lg w-full'>Not yet in the family? &nbsp; <Link className='font-bold text-secondary-blue' to={"/auth/signup"}>{"Join here"}</Link></span>
           <button className='bg-secondary-blue mt-4 text-center w-44 h-12 mx-auto rounded text-white text-xl font-bold' type='submit'>{
-            loading ? <BiLoaderAlt size={25} className="mx-auto" /> : "Continue"
+            loading ? <BiLoaderAlt size={25} className="mx-auto animate-spin" /> : "Continue"
           }</button>
         </form>
       </div>

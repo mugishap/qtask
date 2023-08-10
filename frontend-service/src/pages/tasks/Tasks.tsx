@@ -1,8 +1,8 @@
 import { Avatar, AvatarGroup } from '@mui/material'
 import { format } from 'date-fns'
 import React, { useContext, useEffect, useState } from 'react'
-import { AiFillCheckCircle, AiOutlineCheck, AiOutlineCheckCircle, AiOutlinePlus } from 'react-icons/ai'
-import { BiDownload, BiFilter, BiSort } from 'react-icons/bi'
+import { AiOutlineCheckCircle, AiOutlinePlus } from 'react-icons/ai'
+import { BiDownload, BiSort } from 'react-icons/bi'
 import { CommonContext } from '../../context'
 import { useGetStats, useGetTasks } from '../../hooks'
 import Layout from '../../layout/Layout'
@@ -63,7 +63,7 @@ const Tasks: React.FC = () => {
     return (
         <Layout>
             <div className='w-full justify-between flex px-6 my-6'>
-                <div className='flex items-cener'>
+                <div className='flex items-center'>
                     <div className='border mx-2 border-slate-300 w-24 h-10 rounded-l rounded flex items-center'>
                         <div className={`w-10 rounded-l h-10 flex border items-center justify-center bg-addon text-slate-600 border-r border-r-slate-300`}>
                             <BiSort />
@@ -89,7 +89,7 @@ const Tasks: React.FC = () => {
                 </div>
             </div>
             <div className='w-full grid grid-cols-1 overflow-y-scroll  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-                {tasks.length && tasks.map((task: ITask, index: number) => (
+                {!loading && tasks.length && tasks.map((task: ITask, index: number) => (
                     <div onClick={() => {
                         setActiveTask(task)
                         setShowTask(true)

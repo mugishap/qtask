@@ -15,15 +15,6 @@ export class ProjectService {
             data: {
                 name: dto.name,
                 description: dto.description,
-                file: {
-                    create: {
-                        name: dto.file.name ?? null,
-                        url: dto.file.url ?? null
-                    }
-                }
-            },
-            include: {
-                file: true
             }
         })
         return project;
@@ -43,10 +34,7 @@ export class ProjectService {
     async getProjects(page: number, limit: number) {
         const projects = await this.prisma.project.findMany({
             skip: page * limit,
-            take: Number(limit),
-            include: {
-                file: true
-            }
+            take: Number(limit)
         })
         return projects;
     }
@@ -64,10 +52,7 @@ export class ProjectService {
                 }
             },
             skip: page * limit,
-            take: Number(limit),
-            include: {
-                file: true
-            }
+            take: Number(limit)
         })
         return projects;
     }

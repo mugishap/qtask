@@ -22,10 +22,13 @@ const projectSlice: Slice = createSlice({
         },
         setProjects: (state, { payload }) => {
             state.projects = [...payload]
+        },
+        addProject: (state, { payload }) => {
+            state.projects = [...state.projects, payload]
         }
     }
 });
 
-export const { updateProject, removeProject, setProjects } = projectSlice.actions;
+export const { updateProject, removeProject, setProjects, addProject } = projectSlice.actions;
 
 export default projectSlice.reducer;

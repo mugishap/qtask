@@ -8,7 +8,7 @@ import { useGetTasksByUserAndStatus } from '../../hooks'
 import { ITask } from '../../types'
 
 const Profile: React.FC = () => {
-    const { user, tasksByUserAndStatus, dispatch,setActiveTask,setShowTask } = useContext(CommonContext)
+    const { user, tasksByUserAndStatus, dispatch, setActiveTask, setShowTask } = useContext(CommonContext)
     const [loading, setLoading] = useState<boolean>(false)
     const [activeTaskStatus, setActiveTaskStatus] = useState<"DONE" | "IN_PROGRESS" | "TODO">("TODO")
     useEffect(() => {
@@ -33,36 +33,42 @@ const Profile: React.FC = () => {
                         ))
                     }
                 </div>
-                <div className='w-full grid grid-cols-1 overflow-y-scroll  lg:grid-cols-2 xl:grid-cols-3'>
-                    {
-                      tasksByUserAndStatus?.map((task: ITask, index: number) => (
-                            <div onClick={() => {
-                                setActiveTask(task)
-                                setShowTask(true)
-                            }} className='w-11/12 mx-auto my-2 bg-slate-200 p-4 rounded hover:bg-slate-300 flex flex-col' key={index}>
-                                <div className='w-full flex justify-between'>
-                                    <span className='font-bold text lg'>{task.name}</span>
-                                    {
-                                        task.status !== "DONE" &&
-                                        <div className={`${task.priority === "HIGH" ? "bg-red-500" : task.priority === "MEDIUM" ? "bg-yellow-600" : "bg-green-500"} w-3 h-3 rounded-full`}></div>
-                                    }
-                                    {
-                                        task.status === "DONE" &&
-                                        <span className='bg-green-500 text-white px-3 py-2'>DONE</span>
-                                    }
-                                </div>
-                                <span className='my-4'>{task.createdAt ? format(new Date(task.createdAt), "d MMM HH:MM ") : format(new Date(), "d MMM HH:MM ")}</span>
-                                <AvatarGroup max={4}>
-                                    {
-                                        task.assignees?.map((assignee, index) => (
-                                            <Avatar key={index} alt={assignee.names} title={assignee.names} src={`https://ui-avatars.com/api/?name=${assignee.names}&bold=true&background=1B1464&color=fff`} />
-                                        ))
-                                    }
-                                </AvatarGroup>
-                            </div>
-                        ))
-                    }
-                </div>
+                {
+                    loading ?
+                        <div className='w-full flex items-center justify-center'>
+                            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-blue"></div>
+                        </div>
+                        :
+                        <div className='w-full grid grid-cols-1 overflow-y-scroll  lg:grid-cols-2 xl:grid-cols-3'>
+                            {
+                                tasksByUserAndStatus?.map((task: ITask, index: number) => (
+                                    <div onClick={() => {
+                                        setActiveTask(task)
+                                        setShowTask(true)
+                                    }} className='w-11/12 mx-auto my-2 bg-slate-200 p-4 rounded hover:bg-slate-300 flex flex-col' key={index}>
+                                        <div className='w-full flex justify-between'>
+                                            <span className='font-bold text lg'>{task.name}</span>
+                                            {
+                                                task.status !== "DONE" &&
+                                                <div className={`${task.priority === "HIGH" ? "bg-red-500" : task.priority === "MEDIUM" ? "bg-yellow-600" : "bg-green-500"} w-3 h-3 rounded-full`}></div>
+                                            }
+                                            {
+                                                task.status === "DONE" &&
+                                                <span className='bg-green-500 text-white px-3 py-2'>DONE</span>
+                                            }
+                                        </div>
+                                        <span className='my-4'>{task.createdAt ? format(new Date(task.createdAt), "d MMM HH:MM ") : format(new Date(), "d MMM HH:MM ")}</span>
+                                        <AvatarGroup max={4}>
+                                            {
+                                                task.assignees?.map((assignee, index) => (
+                                                    <Avatar key={index} alt={assignee.names} title={assignee.names} src={`https://ui-avatars.com/api/?name=${assignee.names}&bold=true&background=1B1464&color=fff`} />
+                                                ))
+                                            }
+                                        </AvatarGroup>
+                                    </div>
+                                ))
+                            }
+                        </div>}
             </div>
         </Layout>
     )

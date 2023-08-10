@@ -3,17 +3,16 @@ import React from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { CommonContext } from './context'
-import { useDeleteProject, useDeleteTask, useGetAllUsers, useGetProjects, useGetTasks } from './hooks'
-import NotFound from './pages/404/NotFound'
-import Login from './pages/auth/login/Login'
-import Signup from './pages/auth/signup/Signup'
-import Profile from './pages/profile/Profile'
-import Projects from './pages/projects/Projects'
-import Tasks from './pages/tasks/Tasks'
-import Users from './pages/users/Users'
+const NotFound = React.lazy(() => import('./pages/404/NotFound'))
+const Login = React.lazy(() => import('./pages/auth/login/Login'))
+const Signup = React.lazy(() => import('./pages/auth/signup/Signup'))
+const Profile = React.lazy(() => import('./pages/profile/Profile'))
+const ProjectPage = React.lazy(() => import('./pages/project/ProjectPage'))
+const Projects = React.lazy(() => import('./pages/projects/Projects'))
+const TaskPage = React.lazy(() => import('./pages/task/TaskPage'))
+const Tasks = React.lazy(() => import('./pages/tasks/Tasks'))
+const Users = React.lazy(() => import('./pages/users/Users'))
 import { IProject, ITask, IUser } from './types'
-import TaskPage from './pages/task/TaskPage'
-import ProjectPage from './pages/project/ProjectPage'
 const Home = React.lazy(() => import('./pages/home/Home'))
 
 const Pages: React.FC<{}> = () => {

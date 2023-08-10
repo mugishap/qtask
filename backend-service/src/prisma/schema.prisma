@@ -56,13 +56,12 @@ model Task {
 }
 
 model File {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String?
   url       String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   Task      Task[]
-  Project   Project[]
 
   @@map("files")
 }
@@ -71,9 +70,9 @@ model Project {
   id          String   @id @default(uuid())
   name        String
   description String
-  file        File?    @relation(fields: [fileId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  fileId      String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  Task        Task[]
+
+  fileId String?
+  Task   Task[]
 }

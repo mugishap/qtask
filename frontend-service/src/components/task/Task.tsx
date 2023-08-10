@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react'
-import ModalLayout from '../../layout/ModalLayout'
-import { CommonContext } from '../../context'
-import { IProject, ITask, IUpdateTaskData, IUser } from '../../types'
-import { useDeleteTask, useGetAllProjects, useGetAllUsers, useUpdateTask, useUpdateTaskPriority, useUpdateTaskStatus } from '../../hooks'
-import { BiEdit, BiFile, BiLoaderAlt, BiRename, BiTime, BiX } from 'react-icons/bi'
-import { AiOutlineAlert } from 'react-icons/ai'
 import { Autocomplete, Chip, FormControlLabel, Radio, RadioGroup, TextField } from '@mui/material'
+import { format } from 'date-fns'
+import React, { useEffect } from 'react'
+import { AiOutlineAlert } from 'react-icons/ai'
+import { BiEdit, BiFile, BiLoaderAlt, BiRename, BiTime, BiX } from 'react-icons/bi'
+import { toast } from 'react-toastify'
+import { CommonContext } from '../../context'
+import { useDeleteTask, useGetAllProjects, useGetAllUsers, useUpdateTask, useUpdateTaskPriority, useUpdateTaskStatus } from '../../hooks'
+import ModalLayout from '../../layout/ModalLayout'
+import { IProject, IUpdateTaskData, IUser } from '../../types'
 import { parseDateString } from '../../utils/date'
 import { checkFileType, uploadImage } from '../../utils/file'
-import { toast } from 'react-toastify'
-import { format, parseISO } from 'date-fns'
 
 const Task: React.FC = () => {
 
@@ -74,7 +74,7 @@ const Task: React.FC = () => {
 
     useEffect(() => {
         if (activeTask.priority === priority) return
-        useUpdateTaskPriority({ id: activeTask.id, dispatch, setLoading: setStatusLoading, priority, setActiveTask })
+        useUpdateTaskPriority({ id: activeTask.id, dispatch, setLoading: setPriorityLoading, priority, setActiveTask })
     }, [priority])
 
     return (
@@ -200,7 +200,7 @@ const Task: React.FC = () => {
                                             </div>}
                                 </div>
                                 <button disabled={loading || imageUploading} className='bg-secondary-blue mt-4 text-center w-44 h-12 mx-auto rounded text-white text-xl font-bold' type='submit'>{
-                                    loading ? <BiLoaderAlt size={25} className="mx-auto" /> : "Save"
+                                    loading ? <BiLoaderAlt size={25} className="mx-auto animate-spin" /> : "Save"
                                 }</button>
                             </form>
                         </div>

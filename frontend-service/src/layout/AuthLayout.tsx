@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { backgrounds } from '../constants'
 import { IBackground } from '../types'
-import { Fade } from 'react-awesome-reveal'
+import { Fade, Slide } from 'react-awesome-reveal'
 
 interface Props {
     children: React.ReactNode
@@ -9,20 +9,28 @@ interface Props {
 
 const AuthLayout: React.FC<Props> = ({ children }) => {
 
-    const [randomBackground, setRandomBackground] = React.useState<IBackground>(backgrounds[0])
-
+    const [currentBackground, setCurrentBackground] = React.useState<IBackground>(backgrounds[0])
     useEffect(() => {
-        setRandomBackground(backgrounds[Math.floor(Math.random() * 10)])
-    }, [])
+        const interval = setInterval(() => {
+            const index = backgrounds.indexOf(currentBackground)
+            if (index === backgrounds.length - 1) {
+                setCurrentBackground(backgrounds[0])
+            }
+            else {
+                setCurrentBackground(backgrounds[index + 1])
+            }
+        }, 5000);
+        return () => clearInterval(interval);
+    }, []);
     return (
         <div className='w-full min-h-screen flex items-center'>
-            <div className='md:w-4/12 lg:w-6/12 plg:w-7/12 xl:w-8/12 hidden md:flex flex-col min-h-screen' style={{ background: `url("${randomBackground.image}")` }}>
+            <Slide direction='left' triggerOnce className='md:w-4/12 lg:w-6/12 plg:w-7/12 xl:w-8/12 hidden md:flex flex-col min-h-screen' style={{ background: `url("${currentBackground.image}")` }}>
                 <div className=" bg-gradient-to-t from-black/90 via-black/50 pb-8 flex items-end justify-center to-transparent w-full min-h-screen">
                     <Fade>
-                        <span className='text-white font-bold text-4xl'>{randomBackground.text}</span>
+                        <span className='text-white font-bold text-4xl'>{currentBackground.text}</span>
                     </Fade>
                 </div>
-            </div>
+            </Slide>
             <div className='w-full md:w-8/12 lg:w-6/12 plg:w-5/12 xl:w-4/12 flex min-h-screen pb-8 flex-col justify-between bg-white'>
                 <div className='w-full'>
                     {children}

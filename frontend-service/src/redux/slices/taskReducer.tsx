@@ -26,7 +26,7 @@ const taskSlide: Slice = createSlice({
             state.tasks = [...payload]
         },
         setTask: (state, { payload }) => {
-            state.tasks = state.tasks.map((task: ITask) => task.id === payload.id ? payload : task)
+            state.tasks = state.tasks.map((task: ITask) => task.id === payload.id ? payload.task : task)
         },
         addTask: (state, { payload }) => {
             state.tasks = [...state.tasks, payload]
