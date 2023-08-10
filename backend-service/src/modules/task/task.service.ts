@@ -28,7 +28,10 @@ export class TaskService {
                         url: dto.file.url
                     }
                 },
-                status: dto.status ?? "TODO",
+                project: {
+                    connect: { id: dto.projectId }
+                },
+                status: "TODO",
             }
         })
         return task;

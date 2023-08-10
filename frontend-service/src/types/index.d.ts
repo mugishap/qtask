@@ -29,6 +29,10 @@ export interface ITask {
     assignees?: IUser[]
     file?: IFile
     fileId?: string
+    description: string
+    project?: IProject,
+    priority: "MEDIUM" | "HIGH" | "LOW",
+    status: "TODO" | "IN_PROGRESS" | "DONE"
 }
 
 export interface IFile {
@@ -75,4 +79,11 @@ export interface INewTaskData {
         name: string,
         url: string
     }
+}
+
+export interface IUpdateTaskData {
+    name: string,
+    description: string,
+    startDate: string,
+    endDate: string
 }

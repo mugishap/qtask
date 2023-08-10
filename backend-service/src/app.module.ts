@@ -8,6 +8,7 @@ import { FilesModule } from './modules/files/files.module';
 import { TaskModule } from './modules/task/task.module';
 import { ProjectModule } from './modules/project/project.module';
 import { StatsModule } from './modules/stats/stats.module';
+import { ExcelModule } from './modules/excel/excel.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { StatsModule } from './modules/stats/stats.module';
     AuthModule,
     TaskModule,
     ProjectModule,
-    StatsModule
+    StatsModule,
+    ExcelModule
   ]
 })
 export class AppModule {

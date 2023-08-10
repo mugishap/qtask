@@ -8,8 +8,9 @@ import { CommonContext } from '../context'
 import { ISidebarLink } from '../types'
 import { navbarLinks } from '../constants'
 import { Link } from 'react-router-dom'
-import { Task } from '@mui/icons-material'
 import Project from '../components/projects/Project'
+import Task from '../components/task/Task'
+import DownloadPopup from '../components/task/DownloadPopup'
 
 interface Props {
     children: React.ReactNode
@@ -17,7 +18,7 @@ interface Props {
 
 const Layout: React.FC<Props> = ({ children }) => {
     const [time, setTime] = React.useState(Date.now())
-    const { showCreateProject, showTask, showProject, showCreateTask } = useContext(CommonContext)
+    const { showCreateProject, showDownloadPopup, showTask, showProject, showCreateTask } = useContext(CommonContext)
     useEffect(() => {
         const interval = setInterval(() => setTime(Date.now()), 1000)
         return () => {
@@ -31,6 +32,7 @@ const Layout: React.FC<Props> = ({ children }) => {
             {showCreateTask && <CreateTask />}
             {showTask && <Task />}
             {showProject && <Project />}
+            {showDownloadPopup && <DownloadPopup />}
             <Sidebar />
             <div className='w-full sm:w-7/12 md:w-8/12 lg:w-9/12 xl:w-10/12 flex flex-col min-h-screen'>
                 <div className='w-full flex justify-between items-center sm:justify-end px-8 py-4 border-b-2 border-slate-300'>

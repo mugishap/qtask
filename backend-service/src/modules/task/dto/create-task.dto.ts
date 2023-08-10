@@ -15,18 +15,11 @@ export class CreateTaskDTO {
     @ApiProperty()
     description: string;
 
-    @IsEnum(["TODO", "IN_PROGRESS", "DONE"])
-    @ApiProperty()
-    status: "TODO" | "IN_PROGRESS" | "DONE";
-
     @IsNotEmpty()
-    @IsDate()
     @ApiProperty()
     startDate: Date;
 
-
     @IsNotEmpty()
-    @IsDate()
     @ApiProperty()
     endDate: Date;
 
@@ -38,6 +31,10 @@ export class CreateTaskDTO {
     @IsArray()
     @ApiProperty()
     assigneesIds: string[];
+
+    @IsUUID()
+    @IsNotEmpty({ message: "Project is required" })
+    projectId: string;
 
     @ApiProperty()
     file: {

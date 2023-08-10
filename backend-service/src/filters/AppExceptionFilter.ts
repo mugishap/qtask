@@ -8,6 +8,7 @@ export class AppExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
         const status = exception.getStatus();
+        console.log(exception);
         if (status === 400) {
             if (exception.getResponse() instanceof Object) {
                 return response.status(status).json(ServerResponse.error(exception.getResponse()['message'][0]));

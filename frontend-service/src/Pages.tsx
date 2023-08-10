@@ -38,6 +38,7 @@ const Pages: React.FC<{}> = () => {
     const [showProject, setShowProject] = React.useState(false)
     const [activeProject, setActiveProject] = React.useState<IProject | null>(null)
     const [activeTask, setActiveTask] = React.useState<ITask | null>(null)
+    const [showDownloadPopup, setShowDownloadPopup] = React.useState(false)
 
     const refresh = async ({ data, page, limit, setRefreshLoader }: { page: number, limit: number, setRefreshLoader: Function, data: "tasks" | "projects" | "users" }) => {
         data === "tasks" && useGetTasks({ dispatch, page, limit, setLoading: setRefreshLoader })
@@ -53,6 +54,8 @@ const Pages: React.FC<{}> = () => {
     return (
         <CommonContext.Provider
             value={{
+                showDownloadPopup,
+                setShowDownloadPopup,
                 stats,
                 user,
                 users,

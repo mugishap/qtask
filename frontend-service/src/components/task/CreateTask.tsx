@@ -1,6 +1,6 @@
 import { Autocomplete, Chip, FormControlLabel, Radio, RadioGroup, TextField } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
-import { BiFile, BiLoaderAlt, BiRename, BiTime } from 'react-icons/bi'
+import { BiFile, BiLoaderAlt, BiRename, BiTime, BiX } from 'react-icons/bi'
 import { toast } from 'react-toastify'
 import { CommonContext } from '../../context'
 import { useCreateTask, useGetAllProjects, useGetAllUsers } from '../../hooks'
@@ -28,7 +28,7 @@ const CreateTask: React.FC = () => {
     const { setShowCreateTask, users, dispatch, projects } = useContext(CommonContext)
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        useCreateTask({ dispatch, setLoading, formData, setShowCreateTask })
+        useCreateTask({ dispatch, setLoading, formData, setShowCreateTask, setFormData })
     }
 
     const previewImage = () => {
@@ -59,8 +59,12 @@ const CreateTask: React.FC = () => {
     }, [])
     return (
         <ModalLayout setViewModal={setShowCreateTask} >
-            <div className='w-6/12 bg-white flex flex-col p-4 z-30 mt-6'>
-                <span className='font-bold text-3xl'>Create Task</span>
+            <div className='w-full sm:w-11/12 lg:w-8/12 xl:w-6/12 bg-white flex flex-col p-4 z-30 mt-10 rounded-t-xl sm:rounded-t-lg sm:rounded-lg sm:mt-6'>
+                <div className='w-full flex items-center justify-between'>
+                    <span className='font-bold text-3xl'>Create Task</span>
+                    <BiX size={25} onClick={() => setShowCreateTask(false)} />
+                </div>
+
                 <form className="px-4 w-full flex flex-col" onSubmit={handleSubmit}>
                     <div className='w-full flex my-3 flex-col items-start justify-center'>
                         <div className='my-1 w-full flex items-center justify-between'>
@@ -93,7 +97,7 @@ const CreateTask: React.FC = () => {
                                 <div className={`w-10 rounded-l h-10 flex border items-center justify-center bg-addon text-slate-600 border-r border-r-slate-300`}>
                                     <BiTime />
                                 </div>
-                                <input value={formData.endDate} min={new Date().toISOString().split('T')[0]} onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setFormData({ ...formData, endDate: e.target.value }) }} type={'date'} className={`w-11/12 bg-light-input-bg placeholder:text-gray-400 placeholder:text-sm outline-none rounded-r px-3 h-10`} placeholder={"eg: 2023-01-01"} />
+                                <input value={formData.endDate} min={formData.startDate && new Date(formData.startDate).toISOString().split('T')[0]} onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setFormData({ ...formData, endDate: e.target.value }) }} type={'date'} className={`w-11/12 bg-light-input-bg placeholder:text-gray-400 placeholder:text-sm outline-none rounded-r px-3 h-10`} placeholder={"eg: 2023-01-01"} />
                             </div>
                         </div>
                     </div>
@@ -131,11 +135,12 @@ const CreateTask: React.FC = () => {
                         </div>
                         <Autocomplete
                             disablePortal
-                            id="combo-box-demo"
                             value={projects.find((project: IProject) => project.id === formData.projectId)}
                             onChange={(_, newValue) => {
                                 setFormData({ ...formData, projectId: newValue.id });
                             }}
+                            getOptionLabel={(option) => option.name || ""}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
                             options={projects}
                             className='w-full'
                             renderInput={(params) => <TextField {...params} placeholder='Project' />}

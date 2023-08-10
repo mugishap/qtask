@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import { setStats } from "../redux/slices/statsReducer";
 import { removeProject, setProjects } from "../redux/slices/projectReducer";
 import { addTask, removeTask, setTask, setTasks } from "../redux/slices/taskReducer";
+import { format, parseISO } from "date-fns";
+import { parseDate } from "../utils/date";
 
 export const useLogin = async ({ dispatch, formData, setLoading }: { dispatch: Dispatch, formData: ILoginData, setLoading: Function }) => {
     try {
@@ -63,13 +65,27 @@ export const useGetAllUsers = async ({ dispatch, setLoading }: { dispatch: Dispa
 }
 // Tasks hooks
 
-export const useCreateTask = async ({ dispatch, setLoading, formData, setShowCreateTask }: { dispatch: Dispatch, setLoading: Function, formData: INewTaskData, setShowCreateTask: Function }) => {
+export const useCreateTask = async ({ dispatch, setLoading, formData, setShowCreateTask, setFormData }: { setFormData: Function, dispatch: Dispatch, setLoading: Function, formData: INewTaskData, setShowCreateTask: Function }) => {
     try {
         setLoading(true)
-        const response = await api().post("/task/create", { ...formData })
+        const response = await api().post("/task/create", { ...formData, startDate: new Date(formData.startDate), endDate: new Date(formData.endDate) })
         toast.success(response.data.message)
         dispatch(addTask(response.data.data.task))
         setShowCreateTask(false)
+        setFormData({
+            name: '',
+            startDate: '',
+            endDate: "",
+            description: "",
+            assigneesIds: [],
+            projectId: "",
+            priority: "LOW",
+            file: {
+                name: '',
+                url: ''
+            }
+        })
+        return
     } catch (error: any) {
         console.log(error);
         if (error.response.data.message) return toast.error(error.response.data.message)
@@ -201,4 +217,27 @@ export const useGetStats = async ({ dispatch, setLoading }: { dispatch: Dispatch
 }
 
 
+// Excel hooks
 
+export const useDownloadExcel = async ({ formData, setLoading, setView }: { setView: Function, formData: { startDate: string, endDate: string }, setLoading: Function }) => {
+    try {
+        setLoading(true)
+        const response = await api().get("/excel?startDate=" + parseDate(formData.startDate) + "&endDate=" + parseDate(formData.endDate), { responseType: 'blob' })
+        console.log(response);
+        const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = `Tasks from ${format(new Date(formData.startDate), 'd MMM')} to ${format(new Date(formData.endDate), 'd MMM')}.xlsx`;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setView(false)
+    } catch (error: any) {
+        console.log(error);
+        if (error.response.data.message) return toast.error(error.response.data.message)
+        toast.error("Failed to get file")
+    } finally {
+        setLoading(false)
+    }
+}
