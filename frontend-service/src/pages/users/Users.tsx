@@ -52,9 +52,7 @@ const Users: React.FC = () => {
 
         return pageNumbers;
     }
-    useEffect(() => {
-        console.log(paginatedUsers)
-    }, [paginatedUsers])
+
     useEffect(() => {
         setLimit(5)
     }, [])

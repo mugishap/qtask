@@ -20,7 +20,6 @@ const Tasks: React.FC = () => {
         useGetTasks({ dispatch, page: page - 1, limit: limit, setLoading, })
         useGetStats({ dispatch, setLoading })
         setTotalPages(Math.ceil(stats.tasks / limit))
-        console.log(limit, page, totalPages)
 
     }, [page, limit])
 
