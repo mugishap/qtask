@@ -6,7 +6,7 @@ import Tasks from '../tasks/Tasks'
 
 const TaskPage: React.FC = () => {
     const { id } = useParams<{ id: string }>()
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const { setActiveTask, setShowTask } = useContext(CommonContext)
     useEffect(() => {
         getTask()

@@ -35,13 +35,13 @@ const Pages: React.FC<{}> = () => {
     const isLoggedIn: boolean = userSlice.isLoggedIn
     const tasksByUserAndStatus = taskSlice.tasksByUserAndStatus
 
-    const [showCreateTask, setShowCreateTask] = React.useState(false)
-    const [showCreateProject, setShowCreateProject] = React.useState(false)
-    const [showTask, setShowTask] = React.useState(false)
-    const [showProject, setShowProject] = React.useState(false)
+    const [showCreateTask, setShowCreateTask] = React.useState<boolean>(false)
+    const [showCreateProject, setShowCreateProject] = React.useState<boolean>(false)
+    const [showTask, setShowTask] = React.useState<boolean>(false)
+    const [showProject, setShowProject] = React.useState<boolean>(false)
     const [activeProject, setActiveProject] = React.useState<IProject | null>(null)
     const [activeTask, setActiveTask] = React.useState<ITask | null>(null)
-    const [showDownloadPopup, setShowDownloadPopup] = React.useState(false)
+    const [showDownloadPopup, setShowDownloadPopup] = React.useState<boolean>(false)
 
     return (
         <CommonContext.Provider

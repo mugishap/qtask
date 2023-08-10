@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 const DownloadPopup: React.FC = () => {
 
     const { setShowDownloadPopup } = React.useContext(CommonContext)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const [formData, setFormData] = useState({
         startDate: "",
         endDate: ""

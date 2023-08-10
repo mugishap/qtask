@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom'
 
 const Users: React.FC = () => {
     const { dispatch, users, setActiveUser, stats } = useContext(CommonContext)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const [page, setPage] = useState(1)
     const [limit, setLimit] = useState(5)
     const [totalPages, setTotalPages] = useState<number>(stats.users / limit);

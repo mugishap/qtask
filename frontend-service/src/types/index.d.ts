@@ -25,7 +25,7 @@ export interface ITask {
     name: string
     startDate: Date
     endDate: Date
-    createdAt?: Date
+    createdAt: Date
     updatedAt?: Date
     assignees?: IUser[]
     file?: IFile

@@ -9,7 +9,7 @@ import { ITask } from '../../types'
 
 const Profile: React.FC = () => {
     const { user, tasksByUserAndStatus, dispatch,setActiveTask,setShowTask } = useContext(CommonContext)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const [activeTaskStatus, setActiveTaskStatus] = useState<"DONE" | "IN_PROGRESS" | "TODO">("TODO")
     useEffect(() => {
         useGetTasksByUserAndStatus({ dispatch, setLoading, status: activeTaskStatus })

@@ -51,6 +51,7 @@ export class TaskService {
                     connect: { id: dto.projectId }
                 },
                 file: {
+                    
                     create: {
                         name: dto.file.name,
                         url: dto.file.url

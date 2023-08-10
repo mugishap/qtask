@@ -15,11 +15,11 @@ const Task: React.FC = () => {
 
     const { activeTask, setActiveTask, dispatch, setShowTask, projects, users } = React.useContext(CommonContext)
 
-    const [editMode, setEditMode] = React.useState(false)
-    const [loading, setLoading] = React.useState(false)
-    const [statusLoading, setStatusLoading] = React.useState(false)
-    const [priorityLoading, setPriorityLoading] = React.useState(false)
-    const [imageUploading, setImageUploading] = React.useState(false)
+    const [editMode, setEditMode] = React.useState<boolean>(false)
+    const [loading, setLoading] = React.useState<boolean>(false)
+    const [statusLoading, setStatusLoading] = React.useState<boolean>(false)
+    const [priorityLoading, setPriorityLoading] = React.useState<boolean>(false)
+    const [imageUploading, setImageUploading] = React.useState<boolean>(false)
     const [priority, setPriority] = React.useState<"LOW" | "HIGH" | "MEDIUM">(activeTask.priority)
     const [status, setStatus] = React.useState<"IN_PROGRESS" | "DONE" | "TODO">(activeTask.status)
     const [task, setTask] = React.useState<IUpdateTaskData>({

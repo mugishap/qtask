@@ -2,7 +2,7 @@ import { Avatar, AvatarGroup } from '@mui/material'
 import { format } from 'date-fns'
 import React, { useContext, useEffect, useState } from 'react'
 import { AiFillCheckCircle, AiOutlineCheck, AiOutlineCheckCircle, AiOutlinePlus } from 'react-icons/ai'
-import { BiDownload } from 'react-icons/bi'
+import { BiDownload, BiFilter, BiSort } from 'react-icons/bi'
 import { CommonContext } from '../../context'
 import { useGetStats, useGetTasks } from '../../hooks'
 import Layout from '../../layout/Layout'
@@ -10,15 +10,23 @@ import { ITask } from '../../types'
 
 const Tasks: React.FC = () => {
     const { dispatch, setShowCreateTask, tasks, setActiveTask, setShowTask, setShowDownloadPopup, stats } = useContext(CommonContext)
-    const [loading, setLoading] = useState(false)
-    const [page, setPage] = useState(1)
-    const [limit, setLimit] = useState(5)
-    const [totalPages, setTotalPages] = useState<number>(Math.ceil(stats.tasks / limit));
+    const [loading, setLoading] = useState<boolean>(false)
+    const [page, setPage] = useState<number>(1)
+    const [limit, setLimit] = useState<number>(5)
+    const [totalPages, setTotalPages] = useState<number>(0)
+    const [pageNumbers, setPageNumbers] = useState<(string | number)[]>([])
 
     useEffect(() => {
         useGetTasks({ dispatch, page: page - 1, limit: limit, setLoading, })
         useGetStats({ dispatch, setLoading })
+        setTotalPages(Math.ceil(stats.tasks / limit))
+        console.log(limit, page, totalPages)
+
     }, [page, limit])
+
+    useEffect(() => {
+        setPageNumbers(getPageNumbers())
+    }, [totalPages])
 
     const getPageNumbers = () => {
         const pageNumbers = [];
@@ -49,23 +57,36 @@ const Tasks: React.FC = () => {
                 pageNumbers.push(i);
             }
         }
-
         return pageNumbers;
     }
-    useEffect(() => {
-        console.log(tasks)
-    }, [tasks])
+
     return (
         <Layout>
-            <div className='w-full justify-end flex px-6 my-6'>
-                <button onClick={() => setShowDownloadPopup(true)} className='mx-4 px-4 py-2 flex font-semibold text-lg rounded-lg items-center bg-secondary-blue text-white'>
-                    <BiDownload size={25} />
-                    <span className='ml-2'>Download Excel</span>
-                </button>
-                <button onClick={() => setShowCreateTask(true)} className='mx-4 px-4 py-2 flex font-semibold text-lg rounded-lg items-center bg-secondary-blue text-white'>
-                    <AiOutlinePlus size={25} />
-                    <span className='ml-2'>Add Task</span>
-                </button>
+            <div className='w-full justify-between flex px-6 my-6'>
+                <div className='flex items-cener'>
+                    <div className='border mx-2 border-slate-300 w-24 h-10 rounded-l rounded flex items-center'>
+                        <div className={`w-10 rounded-l h-10 flex border items-center justify-center bg-addon text-slate-600 border-r border-r-slate-300`}>
+                            <BiSort />
+                        </div>
+                        <select value={limit} onChange={(e) => { setLimit(parseInt(e.target.value)) }} className={`w-11/12 bg-light-input-bg placeholder:text-gray-400 placeholder:text-sm outline-none rounded-r px-3 h-8`}>
+                            {
+                                [5, 10, 15, 20].map((item, index) => (
+                                    <option key={index} value={item}>{item}</option>
+                                ))
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div className='flex items-center'>
+                    <button onClick={() => setShowDownloadPopup(true)} className='mx-4 px-4 py-2 flex font-semibold text-lg rounded-lg items-center bg-secondary-blue text-white'>
+                        <BiDownload size={25} />
+                        <span className='ml-2'>Download Excel</span>
+                    </button>
+                    <button onClick={() => setShowCreateTask(true)} className='mx-4 px-4 py-2 flex font-semibold text-lg rounded-lg items-center bg-secondary-blue text-white'>
+                        <AiOutlinePlus size={25} />
+                        <span className='ml-2'>Add Task</span>
+                    </button>
+                </div>
             </div>
             <div className='w-full grid grid-cols-1 overflow-y-scroll  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
                 {tasks.length && tasks.map((task: ITask, index: number) => (
@@ -102,15 +123,14 @@ const Tasks: React.FC = () => {
             </div>
             <div className="flex justify-center my-12">
                 <div className="flex justify-center items-center space-x-2 mt-4">
-                    {page > 1 && (
-                        <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            onClick={() => setPage(page - 1)}
-                        >
-                            Previous
-                        </button>
-                    )}
-                    {getPageNumbers().map((pageNumber, index) => (
+                    <button
+                        disabled={page === 1}
+                        className={` text-white font-bold py-2 px-4 rounded ${page === 1 ? 'cursor-not-allowed bg-slate-500' : 'bg-blue-500 hover:bg-blue-700'}`}
+                        onClick={() => setPage(page - 1)}
+                    >
+                        Previous
+                    </button>
+                    {pageNumbers.map((pageNumber, index) => (
                         <span
                             key={index}
                             className={
@@ -123,14 +143,13 @@ const Tasks: React.FC = () => {
                             {pageNumber}
                         </span>
                     ))}
-                    {page < totalPages - 1 && (
-                        <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            onClick={() => setPage(page + 1)}
-                        >
-                            Next
-                        </button>
-                    )}
+                    <button
+                        disabled={page >= totalPages}
+                        className={` text-white font-bold py-2 px-4 rounded ${page === 1 ? 'cursor-not-allowed bg-slate-500' : 'bg-blue-500 hover:bg-blue-700'}`}
+                        onClick={() => setPage(page + 1)}
+                    >
+                        Next
+                    </button>
                 </div>
             </div>
         </Layout>

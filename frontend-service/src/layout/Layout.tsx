@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 import Project from '../components/projects/Project'
 import Task from '../components/task/Task'
 import DownloadPopup from '../components/task/DownloadPopup'
+import { Fade } from 'react-awesome-reveal'
 
 interface Props {
     children: React.ReactNode
@@ -39,9 +40,9 @@ const Layout: React.FC<Props> = ({ children }) => {
                     <img src={Logo} className='w-12 sm:hidden flex' alt="" />
                     <span className='font-bold text-lg'>{format(time, 'HH:mm:SS aa')}</span>
                 </div>
-                <div className='w-full overflow-y-scroll'>
+                <Fade className='w-full overflow-y-scroll'>
                     {children}
-                </div>
+                </Fade>
                 <div className='w-full absolute bottom-0 sm:hidden h-16 bg-primary-blue flex items-center'>
                     {
                         navbarLinks.map((link: ISidebarLink, index: number) => (

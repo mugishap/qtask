@@ -10,7 +10,7 @@ import { IProject } from '../../types'
 
 const Projects: React.FC = () => {
     const { dispatch, setShowCreateProject, projects, setActiveProject, setShowProject, setShowDownloadPopup, stats } = useContext(CommonContext)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const [page, setPage] = useState(1)
     const [limit, setLimit] = useState(5)
     const [totalPages, setTotalPages] = useState<number>(Math.ceil(stats.projects / limit));

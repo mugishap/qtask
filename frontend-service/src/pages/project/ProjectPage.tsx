@@ -6,7 +6,7 @@ import Projects from '../projects/Projects'
 
 const ProjectPage: React.FC = () => {
     const { id } = useParams<{ id: string }>()
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const { setActiveProject, setShowProject } = useContext(CommonContext)
     useEffect(() => {
         getProject()

@@ -16,7 +16,7 @@ const Signup: React.FC = () => {
     telephone: "",
     password: "",
   })
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const { dispatch } = useContext(CommonContext)
 
