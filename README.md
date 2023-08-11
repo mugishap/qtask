@@ -70,7 +70,7 @@ Then run the project on your local machine
 
 ## 🎈 Usage <a name="usage"></a>
 
-To use the system you will acess the live deployment online using this [link](https://qtask.vercel.app/) or you can run the project on your local machine by following the steps above.
+To use the system you will acess the live deployment online using this [link](https://qtask-frontend.vercel.app/) or you can run the project on your local machine by following the steps above.
 
 ## 🚀 Deployment <a name = "deployment"></a>
 
